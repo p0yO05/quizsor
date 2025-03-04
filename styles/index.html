@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sieses.css">
+</head>
+<body>
+    <header>
+        <h1>Policia Nacional de la Policia Nacional</h1>
+    </header>
+    <main>
+        
+        <div class="box">
+            <h4>Ingresar datos</h4>
+        </div>
+        <form class="form">
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" name="placa"><br><br>
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca"><br><br>
+            <label for="modelo">Modelo:</label>
+            <input type="number" id="modelo" name="modelo"><br><br>
+            <label for="color">Color:</label>
+            <input type="text" id="color" name="color"><br><br>
+            <button type="submit">Buscar</button>
+            <button type ="button"> Añadir</button>
+            <button type = "delete"> Borrar</button>
+        </form>
+     
+    </main>
+    
+    <div class="h2">
+        <h1>www.Losquenopaganticket.com</h1>
+    </div>
+    <div class="h2"><h1></h1></div>
+    <footer class="h2">
+        <h1>Derechos reservados &copy; 2025</h1>
+    </footer>
+    <script>
+        async function fetchAutos() {
+            try { 
+                const response = await fetch('/autos');
+                const autos = await response.json();
+                const tableBody = document.getElementById('autos-table-body');
+                tableBody.innerHTML = '';
+                autos.forEach(auto => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${auto.id}</td>
+                           <td>${auto.placa}</td>
+                    <td>${auto.marca}</td>
+                          <td>${auto.modelo}</td>
+                    <td>${auto.color}</td>
+                        <td>${new Date(auto.fecha_ingreso).toLocaleDateString()}</td>
+                        <td><button onclick="deleteAuto(${auto.id})">Borrar</button></td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching autos:', error);
+            }
+
+            async function deleteAuto(id) {
+                try {
+                    const response = await fetch(`/autos/${id}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        fetchAutos();
+                    } else {
+                        console.error('Error deleting auto:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error deleting auto:', error);
+                }
+            }
+            
+        }
+        
+
+        document.addEventListener('DOMContentLoaded', fetchAutos);
+    </script>
+   
+</body>
+</html>
